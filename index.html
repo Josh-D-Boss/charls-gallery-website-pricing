@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charl's Gallery — Website Design &amp; Development Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1e1b18;
+    --bg-soft: #221e1a;
+    --ink: #f4eee3;
+    --ink-dim: #b6ac99;
+    --ink-faint: #726b5d;
+    --rule: #423c34;
+    --accent: #a44631;
+    --accent-dim: #6b3227;
+    --serif: 'Fraunces', serif;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    background: #0f0d0b;
+  }
+
+  body{
+    font-family: var(--sans);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: clamp(20px, 4vw, 56px) 16px;
+  }
+
+  .page{
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    padding: clamp(36px, 6vw, 88px) clamp(28px, 7vw, 84px) clamp(48px, 6vw, 72px);
+    overflow: hidden;
+  }
+
+  /* registration ticks, quiet print-plate reference */
+  .tick{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    opacity: 0.35;
+  }
+  .tick::before, .tick::after{ content:""; position:absolute; background: var(--ink-dim); }
+  .tick::before{ width:100%; height:1px; top:50%; }
+  .tick::after{ height:100%; width:1px; left:50%; }
+  .tick.tl{ top: 22px; left: 22px; }
+  .tick.tr{ top: 22px; right: 22px; }
+  .tick.bl{ bottom: 22px; left: 22px; }
+  .tick.br{ bottom: 22px; right: 22px; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: clamp(28px, 4vw, 40px);
+  }
+
+  .brand{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .brand-mark{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(30px, 4vw, 42px);
+    color: var(--accent);
+    line-height: 1;
+    transform: translateY(2px);
+  }
+
+  h1{
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 7.2vw, 72px);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-meta{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    text-align: right;
+    padding-bottom: 6px;
+  }
+
+  .hero-meta .l1{
+    font-family: var(--sans);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .hero-meta .l2{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- Rules ---------- */
+  .rule{
+    height: 1px;
+    background: var(--rule);
+    width: 100%;
+  }
+
+  .rule--wide{ margin-bottom: clamp(30px, 5vw, 52px); }
+
+  /* ---------- Market sections ---------- */
+  .market{
+    padding: clamp(30px, 5vw, 48px) 0;
+  }
+
+  .market-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: clamp(22px, 3.5vw, 34px);
+  }
+
+  .market-head h2{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(22px, 2.6vw, 28px);
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .market-head .count{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+
+  .tier-list{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tier{
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    column-gap: 20px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .tier:last-child{ border-bottom: 1px solid var(--rule); }
+
+  .tier-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  .tier-body{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .tier-name{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(19px, 2.4vw, 24px);
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .tier-scope{
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-dim);
+  }
+
+  .tier-price{
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(15px, 1.9vw, 18px);
+    color: var(--ink);
+    white-space: nowrap;
+    text-align: right;
+    align-self: center;
+  }
+
+  .tier-price .cur{
+    color: var(--ink-faint);
+    margin-right: 1px;
+  }
+
+  /* ---------- Footer ---------- */
+  .foot{
+    padding-top: clamp(30px, 5vw, 44px);
+  }
+
+  .foot-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+
+  .foot-row .fname{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-dim);
+    letter-spacing: 0;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 560px){
+    .hero{ align-items: flex-start; }
+    .hero-meta{ align-items: flex-start; text-align: left; }
+    .tier{
+      grid-template-columns: 26px 1fr;
+      row-gap: 8px;
+    }
+    .tier-price{
+      grid-column: 1 / -1;
+      text-align: left;
+      padding-left: 46px;
+      font-size: 17px;
+    }
+    .foot-row{ flex-direction: column; align-items: flex-start; gap: 6px; }
+  }
+
+  @media print{
+    body{ background: var(--bg); padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page{ max-width: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <span class="tick tl"></span>
+  <span class="tick tr"></span>
+  <span class="tick bl"></span>
+  <span class="tick br"></span>
+
+  <header class="hero">
+    <div class="brand">
+      <span class="brand-mark">’</span>
+      <h1>Charl&rsquo;s Gallery</h1>
+    </div>
+    <div class="hero-meta">
+      <span class="l1">Website design &amp; development</span>
+      <span class="l2">PRICING — 2026</span>
+    </div>
+  </header>
+
+  <div class="rule rule--wide"></div>
+
+  <section class="market">
+    <div class="market-head">
+      <h2>Nigerian clients</h2>
+      <span class="count">I — IV</span>
+    </div>
+    <div class="tier-list">
+
+      <div class="tier">
+        <span class="tier-num">I</span>
+        <div class="tier-body">
+          <span class="tier-name">Simple landing page</span>
+          <span class="tier-scope">1–3 pages</span>
+        </div>
+        <span class="tier-price"><span class="cur">₦</span>450,000 – <span class="cur">₦</span>600,000</span>
+      </div>
+
+      <div class="tier">
+        <span class="tier-num">II</span>
+        <div class="tier-body">
+          <span class="tier-name">Small business website</span>
+          <span class="tier-scope">5–10 pages</span>
+        </div>
+        <span class="tier-price"><span class="cur">₦</span>750,000 – <span class="cur">₦</span>900,000</span>
+      </div>
+
+      <div class="tier">
+        <span class="tier-num">III</span>
+        <div class="tier-body">
+          <span class="tier-name">Corporate website</span>
+          <span class="tier-scope">10–20 pages</span>
+        </div>
+        <span class="tier-price"><span class="cur">₦</span>1,200,000 – <span class="cur">₦</span>1,800,000</span>
+      </div>
+
+      <div class="tier">
+        <span class="tier-num">IV</span>
+        <div class="tier-body">
+          <span class="tier-name">Custom web application / LMS</span>
+          <span class="tier-scope">Depending on complexity</span>
+        </div>
+        <span class="tier-price"><span class="cur">₦</span>2,000,000 – <span class="cur">₦</span>10,000,000+</span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section class="market">
+    <div class="market-head">
+      <h2>International clients</h2>
+      <span class="count">I — III</span>
+    </div>
+    <div class="tier-list">
+
+      <div class="tier">
+        <span class="tier-num">I</span>
+        <div class="tier-body">
+          <span class="tier-name">Simple website</span>
+        </div>
+        <span class="tier-price"><span class="cur">$</span>500 – <span class="cur">$</span>1,500</span>
+      </div>
+
+      <div class="tier">
+        <span class="tier-num">II</span>
+        <div class="tier-body">
+          <span class="tier-name">Business website</span>
+        </div>
+        <span class="tier-price"><span class="cur">$</span>1,500 – <span class="cur">$</span>5,000</span>
+      </div>
+
+      <div class="tier">
+        <span class="tier-num">III</span>
+        <div class="tier-body">
+          <span class="tier-name">Custom web application</span>
+        </div>
+        <span class="tier-price"><span class="cur">$</span>5,000 – <span class="cur">$</span>50,000+</span>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="rule"></div>
+    <div class="foot-row">
+      <span class="fname">Charl&rsquo;s Gallery</span>
+      <span>Branding &amp; creative</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
