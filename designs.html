@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charl's Gallery — Design &amp; Graphics Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---------- Design pricing: category tables ---------- */
+
+  .col-head{
+    display: grid;
+    grid-template-columns: 1fr 110px 170px;
+    column-gap: 16px;
+    padding-bottom: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .col-head span:nth-child(2),
+  .col-head span:nth-child(3){ text-align: right; }
+
+  .cat{ padding: clamp(26px, 4.5vw, 40px) 0; border-top: 1px solid var(--rule); }
+  .cat:first-of-type{ border-top: none; padding-top: 0; }
+
+  .cat-head{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(20px, 2.4vw, 25px);
+    margin: 0 0 clamp(14px, 2.4vw, 20px);
+    color: var(--ink);
+  }
+
+  .group{ margin-bottom: 4px; }
+
+  .group-name{
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--ink-dim);
+    padding: 14px 0 4px;
+  }
+  .group:first-child .group-name{ padding-top: 0; }
+
+  .row{
+    display: grid;
+    grid-template-columns: 1fr 110px 170px;
+    column-gap: 16px;
+    align-items: baseline;
+    padding: 9px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .group > .row:first-of-type,
+  .cat > .row:first-of-type{ border-top: none; }
+
+  .row-name{
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .row-name .tier{
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin-top: 2px;
+  }
+
+  .row-price{
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .row-price .cur{ color: var(--ink-faint); margin-right: 1px; }
+  .row-price .lbl{ display: none; }
+
+  @media (max-width: 620px){
+    .col-head{ display: none; }
+    .row{ grid-template-columns: 1fr; row-gap: 4px; padding: 12px 0; }
+    .row-price{ text-align: left; }
+    .row-price .lbl{
+      display: inline-block;
+      width: 44px;
+      color: var(--ink-faint);
+      font-size: 11px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="tabs">
+      <a href="index.html" class="tab">Websites</a>
+      <a href="designs.html" class="tab active">Designs</a>
+    </div>
+    <div class="nav-brand">
+      <span class="nav-div"></span>
+      <span class="name"><span class="full">Charl&rsquo;s Gallery</span><span class="short">CG</span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <span class="tick tl"></span>
+  <span class="tick tr"></span>
+  <span class="tick bl"></span>
+  <span class="tick br"></span>
+
+  <header class="hero">
+    <div class="brand">
+      <span class="brand-mark">’</span>
+      <h1>Charl&rsquo;s Gallery</h1>
+    </div>
+    <div class="hero-meta">
+      <span class="l1">Design &amp; graphics</span>
+      <span class="l2">PRICING — 2026</span>
+    </div>
+  </header>
+
+  <div class="rule rule--wide"></div>
+
+  <div class="col-head">
+    <span>Service</span>
+    <span>International</span>
+    <span>Nigeria</span>
+  </div>
+
+  <!-- Print & Marketing Collateral -->
+  <section class="cat">
+    <h2 class="cat-head">Print &amp; marketing collateral</h2>
+
+    <div class="group">
+      <div class="group-name">Flyer</div>
+      <div class="row"><div class="row-name">Basic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>50</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>60,000</div></div>
+      <div class="row"><div class="row-name">Standard</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>100</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>140,000</div></div>
+      <div class="row"><div class="row-name">Premium</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>150–<span class="cur">$</span>250</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>220,000–<span class="cur">₦</span>350,000</div></div>
+    </div>
+
+    <div class="group">
+      <div class="group-name">Poster</div>
+      <div class="row"><div class="row-name">Basic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>60</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>75,000</div></div>
+      <div class="row"><div class="row-name">Standard</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>120</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>160,000</div></div>
+      <div class="row"><div class="row-name">Premium</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>180–<span class="cur">$</span>300</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>250,000–<span class="cur">₦</span>400,000</div></div>
+    </div>
+
+    <div class="row"><div class="row-name">Business card</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>30–<span class="cur">$</span>120</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>40,000–<span class="cur">₦</span>150,000</div></div>
+    <div class="row"><div class="row-name">Corporate stationery</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>120–<span class="cur">$</span>250</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>180,000–<span class="cur">₦</span>350,000</div></div>
+    <div class="row"><div class="row-name">Brochure</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>100–<span class="cur">$</span>500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>150,000–<span class="cur">₦</span>700,000+</div></div>
+    <div class="row"><div class="row-name">Certificate design</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>40–<span class="cur">$</span>250</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>50,000–<span class="cur">₦</span>300,000</div></div>
+    <div class="row"><div class="row-name">Invitation</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>50–<span class="cur">$</span>250</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>70,000–<span class="cur">₦</span>300,000</div></div>
+    <div class="row"><div class="row-name">Menu design</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>60–<span class="cur">$</span>400</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>80,000–<span class="cur">₦</span>500,000</div></div>
+    <div class="row"><div class="row-name">Billboard / large format</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>100–<span class="cur">$</span>500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>150,000–<span class="cur">₦</span>700,000+</div></div>
+  </section>
+
+  <!-- Branding & Identity -->
+  <section class="cat">
+    <h2 class="cat-head">Branding &amp; identity</h2>
+
+    <div class="group">
+      <div class="group-name">Logo</div>
+      <div class="row"><div class="row-name">Basic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>100</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>150,000</div></div>
+      <div class="row"><div class="row-name">Professional</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>200</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>280,000</div></div>
+      <div class="row"><div class="row-name">Premium</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>300–<span class="cur">$</span>500</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>400,000–<span class="cur">₦</span>700,000</div></div>
+    </div>
+
+    <div class="group">
+      <div class="group-name">Brand identity</div>
+      <div class="row"><div class="row-name">Basic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>350</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>500,000</div></div>
+      <div class="row"><div class="row-name">Standard</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>600</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>800,000</div></div>
+      <div class="row"><div class="row-name">Premium</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>1,000–<span class="cur">$</span>1,500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>1.5m–<span class="cur">₦</span>2.5m+</div></div>
+    </div>
+
+    <div class="group">
+      <div class="group-name">Brand guidelines</div>
+      <div class="row"><div class="row-name">Basic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>300</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>450,000</div></div>
+      <div class="row"><div class="row-name">Standard</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>600</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>850,000</div></div>
+      <div class="row"><div class="row-name">Premium</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>1,000–<span class="cur">$</span>2,000+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>1.5m–<span class="cur">₦</span>3m+</div></div>
+    </div>
+
+    <div class="row"><div class="row-name">Packaging design</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>150–<span class="cur">$</span>1,000+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>250,000–<span class="cur">₦</span>1.5m+</div></div>
+  </section>
+
+  <!-- Digital & Social -->
+  <section class="cat">
+    <h2 class="cat-head">Digital &amp; social</h2>
+    <div class="row"><div class="row-name">Social media post</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>40–<span class="cur">$</span>80</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>50,000–<span class="cur">₦</span>100,000</div></div>
+    <div class="row"><div class="row-name">Carousel</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>80–<span class="cur">$</span>180</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>100,000–<span class="cur">₦</span>220,000</div></div>
+    <div class="row"><div class="row-name">Infographic</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>80–<span class="cur">$</span>500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>100,000–<span class="cur">₦</span>700,000+</div></div>
+    <div class="row"><div class="row-name">Photo manipulation</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>50–<span class="cur">$</span>500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>70,000–<span class="cur">₦</span>700,000+</div></div>
+  </section>
+
+  <!-- Documents & Presentations -->
+  <section class="cat">
+    <h2 class="cat-head">Documents &amp; presentations</h2>
+    <div class="row"><div class="row-name">Company profile</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>150–<span class="cur">$</span>1,000+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>250,000–<span class="cur">₦</span>1.5m+</div></div>
+    <div class="row"><div class="row-name">Pitch deck</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>150–<span class="cur">$</span>1,000+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>250,000–<span class="cur">₦</span>1.5m+</div></div>
+    <div class="row"><div class="row-name">Magazine / editorial</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>150–<span class="cur">$</span>1,500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>250,000–<span class="cur">₦</span>2m+</div></div>
+    <div class="row"><div class="row-name">Advertising campaign</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>200–<span class="cur">$</span>1,500+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>300,000–<span class="cur">₦</span>2m+</div></div>
+  </section>
+
+  <!-- Ongoing Support -->
+  <section class="cat">
+    <h2 class="cat-head">Ongoing support</h2>
+    <div class="row"><div class="row-name">Monthly design retainer</div><div class="row-price"><span class="lbl">Intl</span><span class="cur">$</span>300–<span class="cur">$</span>1,000+</div><div class="row-price"><span class="lbl">NGN</span><span class="cur">₦</span>450,000–<span class="cur">₦</span>1.5m+</div></div>
+  </section>
+
+  <footer class="foot">
+    <div class="rule"></div>
+    <div class="foot-row">
+      <span class="fname">Charl&rsquo;s Gallery</span>
+      <span>Branding &amp; creative</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
