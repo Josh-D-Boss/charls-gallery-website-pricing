@@ -83,6 +83,29 @@
     .tier{ grid-template-columns: 26px 1fr; row-gap: 8px; }
     .tier-price{ grid-column: 1 / -1; text-align: left; padding-left: 46px; font-size: 17px; }
   }
+
+  /* ---------- Country-based pricing: loading state ---------- */
+  .pricing-loading{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(40px, 8vw, 64px) 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .pricing-loading-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pricing-pulse 1.1s ease-in-out infinite;
+  }
+  @keyframes pricing-pulse{
+    0%, 100%{ opacity: 0.25; transform: scale(0.85); }
+    50%{ opacity: 1; transform: scale(1); }
+  }
 </style>
 </head>
 <body>
@@ -95,7 +118,7 @@
     </div>
     <div class="nav-brand">
       <span class="nav-div"></span>
-      <span class="name"><span class="full">Charl&rsquo;s </span><span class="short">CG</span></span>
+      <span class="name"><span class="full">Charl&rsquo;s</span><span class="short">C</span></span>
     </div>
   </div>
 </nav>
@@ -109,7 +132,7 @@
   <header class="hero">
     <div class="brand">
       <span class="brand-mark">’</span>
-      <h1>Charl&rsquo;s </h1>
+      <h1>Charl&rsquo;s</h1>
     </div>
     <div class="hero-meta">
       <span class="l1">Website design &amp; development</span>
@@ -119,7 +142,17 @@
 
   <div class="rule rule--wide"></div>
 
-  <section class="market">
+  <!-- Shown by default (pure CSS, no JS needed) until country detection resolves.
+       This guarantees no flash of the wrong market's pricing. -->
+  <div id="pricing-loading" class="pricing-loading">
+    <span class="pricing-loading-dot"></span> Loading pricing…
+  </div>
+
+  <!-- Hidden by default via the native `hidden` attribute; JS removes it
+       once the correct market's section has been kept and the other removed. -->
+  <div id="pricing-root" hidden>
+
+  <section class="market" data-market="ng">
     <div class="market-head">
       <h2>Nigerian clients</h2>
       <span class="count">I — IV</span>
@@ -167,7 +200,7 @@
 
   <div class="rule"></div>
 
-  <section class="market">
+  <section class="market" data-market="intl">
     <div class="market-head">
       <h2>International clients</h2>
       <span class="count">I — III</span>
@@ -201,14 +234,41 @@
     </div>
   </section>
 
+  </div><!-- /#pricing-root -->
+
   <footer class="foot">
     <div class="rule"></div>
     <div class="foot-row">
-      <span class="fname">Charl&rsquo;s </span>
+      <span class="fname">Charl&rsquo;s</span>
       <span>Branding &amp; creative</span>
     </div>
   </footer>
 </div>
+
+<script src="country-pricing.js"></script>
+<script>
+  // Page-specific: this page shows two separate <section data-market="ng|intl">
+  // blocks. Keep the one matching the visitor's market, remove the other,
+  // then reveal. Kept separate from country-pricing.js so that page-specific
+  // markup handling doesn't leak into the shared detection logic.
+  CGCountry.detectCountry().then(function(country){
+    var root = document.getElementById('pricing-root');
+    var loading = document.getElementById('pricing-loading');
+    var ng = root.querySelector('[data-market="ng"]');
+    var intl = root.querySelector('[data-market="intl"]');
+    var divider = root.querySelector('.rule'); // separates the two sections
+
+    if(country === 'NG'){
+      intl.remove();
+    } else {
+      ng.remove();
+    }
+    if(divider) divider.remove(); // only one market remains, so no divider needed
+
+    loading.hidden = true;
+    root.hidden = false;
+  });
+</script>
 
 </body>
 </html>
