@@ -1,32 +1,40 @@
 /**
- * Charl's Gallery — country-based pricing detection.
+ * Charl's Gallery — central country-based pricing mechanism.
  *
- * Purpose: decide whether a visitor should see Nigerian (NG) or
- * International (INTL) pricing, without asking them and without using
- * navigator.geolocation (no GPS permission prompt).
+ * This is the ONLY place country-detection and pricing-visibility logic
+ * lives. Pages never write their own detection/apply code — they just tag
+ * markup with the data attributes below, and this script does the rest.
+ * That guarantees Website Pricing and Design Pricing (and any future
+ * pricing page) can never drift out of sync with each other.
  *
- * Method: client-side IP geolocation lookup against a free, no-API-key
- * country-lookup endpoint. This works on GitHub Pages because it's just a
- * fetch() call from the visitor's own browser — no server-side code is
- * required on our end, and no secret key needs to be protected.
+ * Markup contract:
+ *   [data-pricing-root]        wrapper hidden by default; revealed once
+ *                               the correct pricing is ready. No visible
+ *                               loading text/spinner is shown at any point —
+ *                               the area is simply blank until ready.
+ *   [data-market="ng"|"intl"]  a whole block to keep only for that market
+ *                               (used where NG/International are separate
+ *                               sections, e.g. the Website pricing page).
+ *   [data-price="ngn"|"usd"]   an inline element to keep only for that
+ *                               currency (used where both prices sit in the
+ *                               same row, e.g. the Design pricing page).
+ *   [data-market-divider]      a purely decorative divider between two
+ *                               market blocks; removed once only one market
+ *                               remains.
  *
- * Note on data exposure: because GitHub Pages cannot run server-side logic,
- * this script can only control what is *displayed*, not what is *delivered*
- * in the page's HTML. Both price lists exist in the page source regardless
- * of country. If the prices ever need to be withheld from the network
- * response entirely (not just the display), that requires a serverless/edge
- * function in front of the site, which this implementation deliberately
- * does not add.
+ * After processing, document.body gets a class of "pricing-ng" or
+ * "pricing-intl" so any page's own CSS can adjust layout (e.g. collapsing a
+ * two-currency grid down to one column) without needing page-specific JS.
  */
-(function (window) {
+(function (window, document) {
   "use strict";
 
   var CACHE_KEY = "cg_country";
   var CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
   var FETCH_TIMEOUT_MS = 2500;
 
-  // Optional, discreet manual override for testing: ?country=NG or ?country=INTL
-  // Not documented/linked anywhere in the UI; normal visitors never see or use it.
+  // Discreet manual override for testing only: ?country=NG or ?country=INTL.
+  // Never surfaced in the UI; normal visitors never see or use it.
   function getOverride() {
     var params = new URLSearchParams(window.location.search);
     var value = params.get("country");
@@ -50,7 +58,7 @@
     try {
       sessionStorage.setItem(CACHE_KEY, JSON.stringify({ country: country, ts: Date.now() }));
     } catch (e) {
-      /* sessionStorage unavailable (e.g. some private-browsing modes) — safe to ignore */
+      /* sessionStorage unavailable — safe to ignore */
     }
   }
 
@@ -67,7 +75,7 @@
     return code === "NG" ? "NG" : "INTL";
   }
 
-  // Primary lookup: ipwho.is — free, no API key, generous rate limit, CORS-enabled.
+  // Primary lookup: free, no API key, CORS-enabled.
   function lookupPrimary() {
     return withTimeout(fetch("https://ipwho.is/?fields=success,country_code"), FETCH_TIMEOUT_MS)
       .then(function (res) { return res.json(); })
@@ -77,8 +85,7 @@
       });
   }
 
-  // Secondary lookup, used only if the primary is unreachable or blocked
-  // (ad blockers / corporate networks sometimes block one but not the other).
+  // Secondary lookup, used only if the primary is unreachable/blocked.
   function lookupSecondary() {
     return withTimeout(fetch("https://ipapi.co/json/"), FETCH_TIMEOUT_MS)
       .then(function (res) { return res.json(); })
@@ -90,12 +97,9 @@
 
   /**
    * Resolves to "NG" or "INTL".
-   *
-   * Fallback if every lookup fails (offline, blocked, rate-limited, etc.):
-   * defaults to "INTL". This is the commercially safer default — Nigeria is
-   * reliably identified by IP-geolocation providers, so genuine detection
-   * failures mostly affect visitors who are, by definition, unclassified;
-   * treating them as international avoids the risk of showing discounted
+   * Fallback on total failure: "INTL" — the commercially safer default,
+   * since genuine detection failures are rare for a well-covered country
+   * like Nigeria, and defaulting to international avoids showing discounted
    * Naira pricing to a visitor who isn't actually in Nigeria.
    */
   function detectCountry() {
@@ -112,9 +116,49 @@
         return country;
       })
       .catch(function () {
-        return "INTL"; // safe fallback — see comment above
+        return "INTL";
       });
   }
 
-  window.CGCountry = { detectCountry: detectCountry };
-})(window);
+  /**
+   * Applies the resolved country to whatever pricing markup exists on the
+   * current page. Safe to call on pages with no pricing markup at all.
+   */
+  function applyPricing(country) {
+    var isNG = country === "NG";
+
+    document.querySelectorAll("[data-market]").forEach(function (el) {
+      var keep = (isNG && el.dataset.market === "ng") || (!isNG && el.dataset.market === "intl");
+      if (!keep) el.remove();
+    });
+
+    document.querySelectorAll("[data-price]").forEach(function (el) {
+      var keep = (isNG && el.dataset.price === "ngn") || (!isNG && el.dataset.price === "usd");
+      if (!keep) el.remove();
+    });
+
+    document.querySelectorAll("[data-market-divider]").forEach(function (el) {
+      el.remove();
+    });
+
+    document.body.classList.add(isNG ? "pricing-ng" : "pricing-intl");
+
+    document.querySelectorAll("[data-pricing-root]").forEach(function (el) {
+      el.hidden = false;
+    });
+  }
+
+  function init() {
+    // Nothing to do on pages with no pricing markup.
+    if (!document.querySelector("[data-pricing-root]")) return;
+    detectCountry().then(applyPricing);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  window.CGCountry = { detectCountry: detectCountry, applyPricing: applyPricing };
+})(window, document);
