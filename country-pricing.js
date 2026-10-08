@@ -31,7 +31,8 @@
 
   var CACHE_KEY = "cg_country";
   var CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-  var FETCH_TIMEOUT_MS = 2500;
+  var LOOKUP_TIMEOUT_MS = 1500;           // per provider
+  var CEILING_MS = 2000;                  // absolute max wait before falling back
 
   // Discreet manual override for testing only: ?country=NG or ?country=INTL.
   // Never surfaced in the UI; normal visitors never see or use it.
@@ -62,45 +63,55 @@
     }
   }
 
-  function withTimeout(promise, ms) {
-    return Promise.race([
-      promise,
-      new Promise(function (_, reject) {
-        setTimeout(function () { reject(new Error("timeout")); }, ms);
-      })
-    ]);
-  }
-
   function normalize(code) {
-    return code === "NG" ? "NG" : "INTL";
+    return String(code).toUpperCase() === "NG" ? "NG" : "INTL";
   }
 
-  // Primary lookup: free, no API key, CORS-enabled.
-  function lookupPrimary() {
-    return withTimeout(fetch("https://ipwho.is/?fields=success,country_code"), FETCH_TIMEOUT_MS)
+  // Free, no-API-key, CORS-enabled providers. All are queried at the same
+  // time; whichever answers first wins. Different providers are blocked by
+  // different ad-blockers/networks, so using several makes detection far
+  // more reliable than relying on one.
+  var PROVIDERS = [
+    "https://api.country.is/",
+    "https://get.geojs.io/v1/ip/country.json",
+    "https://ipwho.is/?fields=success,country_code",
+    "https://ipapi.co/json/"
+  ];
+
+  function lookup(url) {
+    var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, LOOKUP_TIMEOUT_MS);
+    return fetch(url, controller ? { signal: controller.signal } : undefined)
       .then(function (res) { return res.json(); })
       .then(function (data) {
-        if (data && data.success && data.country_code) return normalize(data.country_code);
+        clearTimeout(timer);
+        var code = data && (data.country_code || data.country);
+        if (typeof code === "string" && code.length === 2) return normalize(code);
         throw new Error("no country in response");
-      });
+      })
+      .catch(function (err) { clearTimeout(timer); throw err; });
   }
 
-  // Secondary lookup, used only if the primary is unreachable/blocked.
-  function lookupSecondary() {
-    return withTimeout(fetch("https://ipapi.co/json/"), FETCH_TIMEOUT_MS)
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
-        if (data && data.country_code) return normalize(data.country_code);
-        throw new Error("no country in response");
+  // Resolves with the first provider that succeeds; rejects only if all fail.
+  function firstSuccess(promises) {
+    return new Promise(function (resolve, reject) {
+      var failed = 0;
+      promises.forEach(function (p) {
+        p.then(resolve, function () {
+          failed += 1;
+          if (failed === promises.length) reject(new Error("all providers failed"));
+        });
       });
+    });
   }
 
   /**
-   * Resolves to "NG" or "INTL".
-   * Fallback on total failure: "INTL" — the commercially safer default,
-   * since genuine detection failures are rare for a well-covered country
-   * like Nigeria, and defaulting to international avoids showing discounted
-   * Naira pricing to a visitor who isn't actually in Nigeria.
+   * Resolves to "NG" or "INTL" — never rejects, never waits longer than
+   * CEILING_MS.
+   * Fallback on total failure/timeout: "INTL" — the commercially safer
+   * default, since it avoids showing discounted Naira pricing to a visitor
+   * who isn't actually in Nigeria. (Failures are not cached, so the next
+   * page view tries detection again.)
    */
   function detectCountry() {
     var override = getOverride();
@@ -109,15 +120,16 @@
     var cached = getCached();
     if (cached) return Promise.resolve(cached);
 
-    return lookupPrimary()
-      .catch(lookupSecondary)
-      .then(function (country) {
-        setCached(country);
-        return country;
-      })
-      .catch(function () {
-        return "INTL";
-      });
+    var detection = firstSuccess(PROVIDERS.map(lookup)).then(function (country) {
+      setCached(country);
+      return country;
+    });
+
+    var ceiling = new Promise(function (resolve) {
+      setTimeout(function () { resolve("INTL"); }, CEILING_MS);
+    });
+
+    return Promise.race([detection, ceiling]).catch(function () { return "INTL"; });
   }
 
   /**
